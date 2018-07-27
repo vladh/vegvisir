@@ -1,66 +1,106 @@
 .page
-  .omnibox
-    input(type='text', v-model='userInput')
-    p Try:
-    div
-      span Chord Names
-      button.btn-text(@click='userInput = "F C F A D E"') F C F A D E
-    div
-      span Key signatures
-      button.btn-text(@click='userInput = "5 sharps"') 5 sharps
-    div
-      span Chords
-      button.btn-text(@click='userInput = "Fmaj7b5"') Fmaj7b5
-    div
-      span Chord types
-      button.btn-text(@click='userInput = "sus2"') sus2
-    div
-      span Scales
-      button.btn-text(@click='userInput = "D lydian"') D lydian
-    div
-      span Scale types
-      button.btn-text(@click='userInput = "mixolydian"') mixolydian
+  .header
+    h1.logo vegvisir
+    .omnibox
+      input(type='text', v-model='userInput')
+    .examples
+      span Try:
+      .example
+        .name
+          span Chord Names
+        .control
+          button.btn-text(@click='userInput = "F C F A D E"') F C F A D E
+      .example
+        .name
+          span Key signatures
+        .control
+          button.btn-text(@click='userInput = "5 sharps"') 5 sharps
+      .example
+        .name
+          span Chords
+        .control
+          button.btn-text(@click='userInput = "Fmaj7b5"') Fmaj7b5
+      .example
+        .name
+          span Chord types
+        .control
+          button.btn-text(@click='userInput = "sus2"') sus2
+      .example
+        .name
+          span Scales
+        .control
+          button.btn-text(@click='userInput = "D lydian"') D lydian
+      .example
+        .name
+          span Scale types
+        .control
+          button.btn-text(@click='userInput = "mixolydian"') mixolydian
 
-  .results.grid
-    .info
+  .results
+    .title
       template(v-if="screenType == 'key_signature'")
-        h1 Key Signature
-        h2 ${screenData.keySignature.major} major / ${screenData.keySignature.minor} minor
-        p ${screenData.number} ${screenData.accidental}
-
+        .type
+          .label Key Signature
+        .desc
+          h2 ${screenData.keySignature.major} major / ${screenData.keySignature.minor} minor
       template(v-if="screenType == 'chord_names'")
-        h1 Chord Names
-        h2 ${screenData.notes.map(n => n.name).join(' ')}
-        ul
-          li(v-for='name in screenData.names') ${name}
-
+        .type
+          .label Chord Names
+        .desc
+          h2 ${screenData.notes.map(n => n.name).join(' ')}
       template(v-if="screenType == 'chord_type'")
-        h1 Chord Type
-        h2 ${screenData.chord.formattedSymbol}
-        ul
-          li(v-for='interval in screenData.intervals') ${interval}
-        h2 Scales
-        ul
-          li(v-for='scale in screenData.chord.scales()') ${scale.name}
-
+        .type
+          .label Chord Type
+        .desc
+          h2 ${screenData.chord.formattedSymbol}
       template(v-if="screenType == 'scale_type'")
-        h1 Scale Type
-        h2 ${screenData.name}
-        ul
-          li(v-for='interval in screenData.intervals') ${interval.name}
-
+        .type
+          .label Scale Type
+        .desc
+          h2 ${screenData.scale.name}
       template(v-if="screenType == 'scale_instance'")
-        h1 Scale
-        h2 ${screenData.fullName}
-        ul
-          li(v-for='note in screenData.scale') ${note.fullName}
-
+        .type
+          .label Scale
+        .desc
+          h2 ${screenData.fullName}
       template(v-if="screenType == 'chord_instance'")
-        h1 Chord
-        h2 ${screenData.root.letter}${screenData.formattedSymbol}
-        ul
-          li(v-for='note in screenData.chord') ${note.fullName}
-        h2 Scales
-        ul
-          li(v-for='scale in screenData.scales()') ${scale.fullName}
-    #engraving.engraving
+        .type
+          .label Chord
+        .desc
+          h2 ${screenData.root.name}${screenData.formattedSymbol}
+    .grid
+      .info
+        template(v-if="screenType == 'key_signature'")
+          p ${screenData.number} ${screenData.accidental}
+
+        template(v-if="screenType == 'chord_names'")
+          ul
+            li(v-for='name in screenData.names') ${name}
+
+        template(v-if="screenType == 'chord_type'")
+          ul
+            li(v-for='interval in screenData.intervals') ${interval.type}${interval.degree}
+          h3 Fitting scales
+          ul(v-if='screenData.chord.scales().length')
+            li(v-for='scale in screenData.chord.scales()') ${scale.name}
+          p(v-else) No scales to be found. What a chord!
+
+        template(v-if="screenType == 'scale_type'")
+          ul
+            li(v-for='interval in screenData.prettyIntervals') ${interval}
+
+        template(v-if="screenType == 'scale_instance'")
+          ul
+            li(v-for='note in screenData.scale') ${note.fullName}
+
+        template(v-if="screenType == 'chord_instance'")
+          ul.horizontal
+            li(v-for='note in screenData.chord') ${note.name}
+          h3 Fitting scales
+          ul(v-if='screenData.scales().length')
+            li(v-for='scale in screenData.scales()') ${scale.fullName}
+          p(v-else) No scales to be found. What a chord!
+      #engraving.engraving
+
+  .credit
+    a(href='https://vladh.net') vladh.net

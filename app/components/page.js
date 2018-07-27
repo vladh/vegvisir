@@ -45,7 +45,7 @@ Vue.component('page', {
 
   computed: {
     screenType: function() {
-      const input = (this.userInput || '').trim()
+      const input = (this.userInput || '').trim().replace(/\s\s+/g, ' ')
       if (!input || input.length == 0) { return SCREENS.EMPTY }
       if (this.isKeySignatureInput(input)) { return SCREENS.KEY_SIGNATURE }
       if (this.isScaleTypeInput(input)) { return SCREENS.SCALE_TYPE }
@@ -59,7 +59,7 @@ Vue.component('page', {
     screenData: function() {
       this.makeContext() // worst side effect ever lol
 
-      const input = (this.userInput || '').trim()
+      const input = (this.userInput || '').trim().replace(/\s\s+/g, ' ')
 
       const functions = {
         [SCREENS.KEY_SIGNATURE]: this.processKeySignatureInput,
@@ -97,7 +97,8 @@ Vue.component('page', {
     },
 
     isChordNamesInput(input) {
-      return input.split(' ').length > 1 && music.isNoteArray(input.split(' '))
+      return input.split(' ').length > 1 &&
+        music.isNoteArray(input.split(' '))
     },
 
     processChordNamesInput(input) {
@@ -112,6 +113,9 @@ Vue.component('page', {
     },
 
     isChordInstanceInput(input) {
+      if (input.toLowerCase().startsWith('add')) {
+        return false
+      }
       return music.isChord(input)
     },
 

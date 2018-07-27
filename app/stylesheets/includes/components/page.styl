@@ -1,11 +1,103 @@
+@import '../colors'
+
 .page
-  margin-top 2rem
-  .omnibox
+  min-height 100vh
+  display flex
+  flex-direction column
+  .header
+    flex 0 1
     padding 2rem
-    input
-      display block
+    background color-vladh-13-primary
+    color white
+    a, button.btn-text
+      color white
+      border-bottom 1px dashed white
+    .logo
+      margin-bottom 1rem
+      font-weight bold
+      font-size 1rem
+    .omnibox
+      padding 1rem 0
+      input
+        display block
+        width 100%
+        max-width 20rem
+        margin 0 auto
+        padding 1rem
+        font-size 1.5rem
+    .examples
       margin 0 auto
+      margin-top 1rem
+      max-width 20rem
+      text-align center
+      .example
+        display flex
+        margin-bottom 0.1rem
+        .name
+          flex 1
+          text-align right
+          margin-right 1rem
+        .control
+          flex 1
+          text-align left
+          margin-left 1rem
+  .results
+    flex 1 0
+    padding 2rem
+    background white
+    .title
+      display flex
+      flex-direction row-reverse
+      margin-bottom 2rem
+      .desc
+        flex 1
+      .type
+        flex 1
+        text-align right
+      h2
+        margin 0
+        font-size 2rem
+      .label
+        display inline-block
+        padding 0.7rem 1rem
+        padding-bottom 0.5rem
+        font-size 1rem
+        color white
+        background color-vladh-13-primary
+      @media (max-width: 600px)
+        display block
+        .type
+          margin-bottom 1rem
+          text-align left
+    .info
+      font-size 1.2rem
+      h3
+        margin 0 // reset
+        margin-top 2rem
+        margin-bottom 1rem
+        font-size 1.6rem
+    .engraving
+      height 10rem
+
+  .credit
+    flex 0 1
+    padding 1rem 2rem
+    background white
+    text-align right
+
+  ul
+    list-style none // reset
+    margin 0 // reset
+    padding 0 // reset
+    margin-bottom 1rem
+    &.horizontal
+      display flex
+      flex-wrap wrap
+      li
+        flex 1
+        margin-right 0.5rem
+        text-align center
+    li
+      margin-bottom 0.5rem
       padding 1rem
-      font-size 1.5rem
-  .engraving
-    height 20rem
+      background #f6f6f6

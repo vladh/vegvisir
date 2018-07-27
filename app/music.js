@@ -41,6 +41,15 @@ export function addOctavesToNotes(notes) {
   return newNotes
 }
 
+export function prettifyIntervals(intervals) {
+  return intervals.map((interval) => {
+    if (interval.quality == 'P' || interval.quality == 'M') {
+      return interval.number
+    }
+    return interval.name
+  })
+}
+
 export function isKeySignature(sig) {
   const split = sig.split(' ')
   if (split.length != 2) { return false }
@@ -148,7 +157,11 @@ export function isScale(scaleName) {
 }
 
 export function getScaleIntervals(scaleName) {
-  return s11.scale.create('C', scaleName.replace(' ', '_'))
+  const scale = s11.scale.create('C', scaleName.replace(' ', '_'))
+  return {
+    scale: scale,
+    prettyIntervals: prettifyIntervals(scale.intervals),
+  }
 }
 
 export function isScaleInstance(scale) {
