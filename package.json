@@ -1,9 +1,10 @@
 {
-  "name": "wohnviertel",
+  "name": "vegvisir",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
     "lodash": "^4.13.1",
+    "sharp11": "git+ssh://git@github.com/vladh/sharp11.git",
     "vue": "^2.4.2"
   },
   "devDependencies": {

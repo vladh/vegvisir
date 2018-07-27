@@ -1,2 +1,28 @@
 .page
-  p Hello!
+  .omnibox
+    input(type='text', v-model='userInput')
+
+    template(v-if="screenType == 'chord_names'")
+      h2 Chord Names
+      ul
+        li(v-for='name in screenData.names') ${name}
+
+    template(v-if="screenType == 'scale_type'")
+      h2 ${screenData.name} Scale
+      ul
+        li(v-for='interval in screenData.intervals') ${interval.name}
+
+    template(v-if="screenType == 'scale_instance'")
+      h2 ${screenData.fullName}
+      ul
+        li(v-for='note in screenData.scale') ${note.fullName}
+
+    template(v-if="screenType == 'chord_instance'")
+      h2 ${screenData.name}
+      ul
+        li(v-for='note in screenData.chord') ${note.fullName}
+
+    template(v-if="screenType == 'chord_type'")
+      h2 ${screenData.symbol}
+      ul
+        li(v-for='interval in screenData.intervals') ${interval}
