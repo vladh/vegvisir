@@ -1,0 +1,40 @@
+@import 'responsive'
+@import 'colors'
+
+*
+  box-sizing border-box
+
+.clearfix:after
+  content " "
+  display block
+  clear both
+
+html, body
+  margin 0
+  padding 0
+  font-family 'DIN Next LT Pro', 'Helvetica Neue', Helvetica, sans-serif
+  font-size 16px
+  line-height 1.5
+  color #222
+
+h1, h2, h3, h4, h5, h6
+  font-weight normal
+
+p
+  margin-top 0
+  margin-bottom 1rem
+  &:last-child
+    margin-bottom 0
+
+.grid-container
+  margin 0 auto
+  width 1200px
+  max-width 100%
+
+.grid
+  display grid
+  grid-gap 4rem
+  grid-template-columns repeat(auto-fit, minmax(200px, 1fr))
+  &.grid--tight
+    grid-gap 1rem
+

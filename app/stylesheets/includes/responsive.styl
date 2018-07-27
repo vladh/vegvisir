@@ -1,0 +1,9 @@
+breakpoint-sm-max = 767px
+
+media-sm-max()
+  @media (max-width: breakpoint-sm-max)
+    block
+
+media-lg-min()
+  @media (min-width: (breakpoint-sm-max + 1))
+    block

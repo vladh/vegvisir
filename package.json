@@ -1,0 +1,23 @@
+{
+  "name": "wohnviertel",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "lodash": "^4.13.1",
+    "vue": "^2.4.2"
+  },
+  "devDependencies": {
+    "auto-reload-brunch": "^2.7.1",
+    "babel-brunch": "^6.1.1",
+    "babel-preset-env": "^1.7.0",
+    "brunch": "^2.10.12",
+    "clean-css-brunch": "^2.10.0",
+    "pugjs-brunch": "^2.10.2",
+    "stylus-brunch": "^2.10.0",
+    "uglify-js-brunch": "^2.10.0"
+  },
+  "scripts": {
+    "start": "brunch watch --server",
+    "build": "brunch build --production"
+  }
+}

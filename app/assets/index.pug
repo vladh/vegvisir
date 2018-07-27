@@ -1,0 +1,13 @@
+extends /includes/layout
+
+block meta
+  +page-title('Home')
+  +page-description('TODO')
+
+block content
+  .grid-container
+    page
+
+block prescripts
+  script#component-template--page(type='text/x-template')
+    include /includes/components/page

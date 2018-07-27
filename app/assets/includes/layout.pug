@@ -1,0 +1,33 @@
+mixin page-title(title)
+  title= title + ''
+  meta(property='og:title' content=title + '')
+
+mixin page-description(description)
+  meta(name='description' content=description)
+  meta(property='og:description' content=description)
+
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+
+    block meta
+
+    meta(
+      name='viewport'
+      content='width=device-width, user-scalable=no, initial-scale=1'
+    )
+
+    meta(property='og:url' content=reqFullUrl)
+    meta(property='og:type' content='website')
+    meta(property='og:site_name' content='')
+
+    include default-stylesheets
+    block stylesheets
+
+  body
+    #page-container.page-container
+      block content
+    block prescripts
+    include default-scripts
+    block scripts

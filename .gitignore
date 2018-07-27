@@ -1,0 +1,7 @@
+node_modules/
+
+public/*.js
+public/*.js.map
+public/*.css
+public/*.css.map
+public/*.html
