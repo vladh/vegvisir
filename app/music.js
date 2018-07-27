@@ -22,6 +22,25 @@ const KEY_SIGNATURES = [
   {major: 'F', minor: 'd', sharps: 0, flats: 1},
 ]
 
+const DEFAULT_OCTAVE = 4
+
+export function addOctavesToNotes(notes) {
+  let currentOctave = 4
+  let allNotes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
+  let remainingNotes = allNotes.slice()
+
+  const newNotes = notes.map((note) => {
+    if (!remainingNotes.includes(note.name)) {
+      currentOctave += 1
+      remainingNotes = allNotes.slice()
+    }
+    remainingNotes = remainingNotes.slice(remainingNotes.indexOf(note.name) + 1)
+    return s11.note.create(note.name, currentOctave)
+  })
+
+  return newNotes
+}
+
 export function isKeySignature(sig) {
   const split = sig.split(' ')
   if (split.length != 2) { return false }
@@ -57,9 +76,10 @@ export function isNoteArray(notes) {
 }
 
 export function getChordNames(notes) {
+  const names = s11.chord.getPossibleChordNamesFromArray(notes)
   return {
-    notes: notes.map(s11.note.create),
-    names: s11.chord.getPossibleChordNamesFromArray(notes),
+    notes: notes.map(n => s11.note.create(n, 4)),
+    names: names,
   }
 }
 
@@ -76,7 +96,8 @@ export function getChordAndNormalise(name) {
   return s11.chord.create(
     s11.chord.identifyArray(
       s11.chord.create(name).chord.map(n => n.name)
-    )
+    ),
+    DEFAULT_OCTAVE
   )
 }
 
@@ -147,5 +168,5 @@ export function getScale(scale) {
   const split = scale.split(' ')
   const note = split[0]
   const type = split.slice(1).join('_')
-  return s11.scale.create(note, type)
+  return s11.scale.create(note, type).inOctave(DEFAULT_OCTAVE)
 }

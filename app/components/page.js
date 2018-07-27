@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import * as s11 from 'sharp11'
 import * as music from '../music'
+import Vex from 'vexflow'
 
 window.s11 = s11
 
@@ -56,6 +57,8 @@ Vue.component('page', {
     },
 
     screenData: function() {
+      this.makeContext() // worst side effect ever lol
+
       const input = (this.userInput || '').trim()
 
       const functions = {
@@ -85,7 +88,9 @@ Vue.component('page', {
 
     processKeySignatureInput(input) {
       try {
-        return [null, music.getKeyForSignature(input)]
+        const info = music.getKeyForSignature(input)
+        this.drawKeySignature(info.keySignature.major)
+        return [null, info]
       } catch (e) {
         return [e, null]
       }
@@ -98,7 +103,9 @@ Vue.component('page', {
     processChordNamesInput(input) {
       const notes = input.split(' ')
       try {
-        return [null, music.getChordNames(notes)]
+        const info = music.getChordNames(notes)
+        this.drawChord(music.addOctavesToNotes(info.notes))
+        return [null, info]
       } catch (e) {
         return [e, null]
       }
@@ -110,7 +117,9 @@ Vue.component('page', {
 
     processChordInstanceInput(input) {
       try {
-        return [null, music.getChord(input)]
+        const chord = music.getChord(input)
+        this.drawChord(chord.chord)
+        return [null, chord]
       } catch (e) {
         return [e, null]
       }
@@ -146,10 +155,99 @@ Vue.component('page', {
 
     processScaleInstanceInput(input) {
       try {
-        return [null, music.getScale(input)]
+        const scale = music.getScale(input)
+        this.drawNotes(scale.scale)
+        return [null, scale]
       } catch (e) {
         return [e, null]
       }
+    },
+
+    noteNameToVex(name) {
+      const pitch = name.slice(0, -1)
+      const octave = name.slice(-1)
+      return pitch.toLowerCase() + '/' + octave
+    },
+
+    addVexAccidentalsForNotes(notes, staveNote) {
+      notes.forEach((n, idx) => {
+        if (n.accidental != 'n') {
+          staveNote = staveNote.addAccidental(
+            idx, new Vex.Flow.Accidental(n.accidental)
+          )
+        }
+      })
+      return staveNote
+    },
+
+    makeContext() {
+      const elMusic = this.$el.querySelector('.engraving')
+      const elMusicDims = elMusic.getBoundingClientRect()
+      elMusic.innerHTML = ''
+      const renderer = new Vex.Flow.Renderer(elMusic, Vex.Flow.Renderer.Backends.SVG)
+      renderer.resize(elMusicDims.width, elMusicDims.height)
+      return renderer.getContext()
+    },
+
+    drawNotes(notes) {
+      const context = this.makeContext()
+      const stave = new Vex.Flow.Stave(10, 40, 500)
+      stave.addClef('treble')
+      stave.setContext(context).draw()
+
+      const tickables = notes.map(n =>
+        this.addVexAccidentalsForNotes(
+          [n],
+          new Vex.Flow.StaveNote({
+            clef: 'treble',
+            keys: [this.noteNameToVex(n.fullName)],
+            duration: 'q',
+          })
+        )
+      )
+
+      const voices = [
+        new Vex.Flow.Voice({num_beats: notes.length, beat_value: 4})
+          .addTickables(tickables)
+      ]
+
+      const formatter = new Vex.Flow.Formatter().joinVoices(voices).format(voices, 400)
+
+      voices.forEach(v => v.draw(context, stave))
+    },
+
+    drawChord(notes) {
+      const context = this.makeContext()
+      const stave = new Vex.Flow.Stave(10, 40, 200)
+      stave.addClef('treble')
+      stave.setContext(context).draw()
+
+      const tickables = [
+        this.addVexAccidentalsForNotes(
+          notes,
+          new Vex.Flow.StaveNote({
+            clef: 'treble',
+            keys: notes.map(n => n.fullName).map(this.noteNameToVex),
+            duration: 'w',
+          }),
+        )
+      ]
+
+      const voices = [
+        new Vex.Flow.Voice({num_beats: 4, beat_value: 4})
+          .addTickables(tickables)
+      ]
+
+      const formatter = new Vex.Flow.Formatter().joinVoices(voices).format(voices, 400)
+
+      voices.forEach(v => v.draw(context, stave))
+    },
+
+    drawKeySignature(key) {
+      const context = this.makeContext()
+      const stave = new Vex.Flow.Stave(10, 40, 100)
+      stave.addKeySignature(key)
+      stave.setContext(context).draw()
     },
   },
 })
