@@ -1,28 +1,60 @@
 .page
   .omnibox
     input(type='text', v-model='userInput')
+    p Try:
+    div
+      span Key signatures
+      button.btn-text(@click='userInput = "5 sharps"') 5 sharps
+    div
+      span Chords
+      button.btn-text(@click='userInput = "Fmaj7b5"') Fmaj7b5
+    div
+      span Chord types
+      button.btn-text(@click='userInput = "sus2"') sus2
+    div
+      span Scales
+      button.btn-text(@click='userInput = "F lydian"') F lydian
+    div
+      span Scale types
+      button.btn-text(@click='userInput = "mixolydian"') mixolydian
+
+    template(v-if="screenType == 'key_signature'")
+      h1 Key Signature
+      h2 ${screenData.keySignature.major} major / ${screenData.keySignature.minor} minor
+      p ${screenData.number} ${screenData.accidental}
 
     template(v-if="screenType == 'chord_names'")
-      h2 Chord Names
+      h1 Chord Names
+      h2 ${screenData.notes.map(n => n.name).join(' ')}
       ul
         li(v-for='name in screenData.names') ${name}
 
+    template(v-if="screenType == 'chord_type'")
+      h1 Chord Type
+      h2 ${screenData.chord.formattedSymbol}
+      ul
+        li(v-for='interval in screenData.intervals') ${interval}
+      h2 Scales
+      ul
+        li(v-for='scale in screenData.chord.scales()') ${scale.name}
+
     template(v-if="screenType == 'scale_type'")
-      h2 ${screenData.name} Scale
+      h1 Scale Type
+      h2 ${screenData.name}
       ul
         li(v-for='interval in screenData.intervals') ${interval.name}
 
     template(v-if="screenType == 'scale_instance'")
+      h1 Scale
       h2 ${screenData.fullName}
       ul
         li(v-for='note in screenData.scale') ${note.fullName}
 
     template(v-if="screenType == 'chord_instance'")
-      h2 ${screenData.name}
+      h1 Chord
+      h2 ${screenData.root.letter}${screenData.formattedSymbol}
       ul
         li(v-for='note in screenData.chord') ${note.fullName}
-
-    template(v-if="screenType == 'chord_type'")
-      h2 ${screenData.symbol}
+      h2 Scales
       ul
-        li(v-for='interval in screenData.intervals') ${interval}
+        li(v-for='scale in screenData.scales()') ${scale.fullName}
