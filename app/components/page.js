@@ -191,7 +191,7 @@ Vue.component('page', {
 
     drawNotes(notes) {
       const context = this.makeContext()
-      const stave = new Vex.Flow.Stave(10, 40, 500)
+      const stave = new Vex.Flow.Stave(0, 0, 500)
       stave.addClef('treble')
       stave.setContext(context).draw()
 
@@ -211,14 +211,14 @@ Vue.component('page', {
           .addTickables(tickables)
       ]
 
-      const formatter = new Vex.Flow.Formatter().joinVoices(voices).format(voices, 400)
+      const formatter = new Vex.Flow.Formatter().joinVoices(voices).format(voices, 500)
 
       voices.forEach(v => v.draw(context, stave))
     },
 
     drawChord(notes) {
       const context = this.makeContext()
-      const stave = new Vex.Flow.Stave(10, 40, 200)
+      const stave = new Vex.Flow.Stave(0, 0, 200)
       stave.addClef('treble')
       stave.setContext(context).draw()
 
@@ -238,14 +238,14 @@ Vue.component('page', {
           .addTickables(tickables)
       ]
 
-      const formatter = new Vex.Flow.Formatter().joinVoices(voices).format(voices, 400)
+      const formatter = new Vex.Flow.Formatter().joinVoices(voices).format(voices, 200)
 
       voices.forEach(v => v.draw(context, stave))
     },
 
     drawKeySignature(key) {
       const context = this.makeContext()
-      const stave = new Vex.Flow.Stave(10, 40, 100)
+      const stave = new Vex.Flow.Stave(0, 0, 100)
       stave.addKeySignature(key)
       stave.setContext(context).draw()
     },
