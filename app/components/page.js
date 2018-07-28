@@ -8,6 +8,7 @@ window.s11 = s11
 const SCREENS = {
   UNKNOWN: 'unknown',
   EMPTY: 'empty',
+  CIRCLE: 'circle',
   KEY_SIGNATURE: 'key_signature',
   CHORD_NAMES: 'chord_names',
   CHORD_INSTANCE: 'chord_instance',
@@ -29,6 +30,8 @@ Vue.component('page', {
   },
 
   /*
+    Circle of fifths:
+      * circle
     Key signature:
       * 5 sharps
     Chord names:
@@ -47,6 +50,7 @@ Vue.component('page', {
     screenType: function() {
       const input = (this.userInput || '').trim().replace(/\s\s+/g, ' ')
       if (!input || input.length == 0) { return SCREENS.EMPTY }
+      if (this.isCircleInput(input)) { return SCREENS.CIRCLE }
       if (this.isKeySignatureInput(input)) { return SCREENS.KEY_SIGNATURE }
       if (this.isScaleTypeInput(input)) { return SCREENS.SCALE_TYPE }
       if (this.isScaleInstanceInput(input)) { return SCREENS.SCALE_INSTANCE }
@@ -62,6 +66,7 @@ Vue.component('page', {
       const input = (this.userInput || '').trim().replace(/\s\s+/g, ' ')
 
       const functions = {
+        [SCREENS.CIRCLE]: this.processCircleInput,
         [SCREENS.KEY_SIGNATURE]: this.processKeySignatureInput,
         [SCREENS.CHORD_NAMES]: this.processChordNamesInput,
         [SCREENS.SCALE_TYPE]: this.processScaleTypeInput,
@@ -82,6 +87,14 @@ Vue.component('page', {
       console.error(err)
     },
 
+    isCircleInput(input) {
+      return input == 'circle'
+    },
+
+    processCircleInput(input) {
+      return true
+    },
+
     isKeySignatureInput(input) {
       return music.isKeySignature(input)
     },
@@ -89,7 +102,7 @@ Vue.component('page', {
     processKeySignatureInput(input) {
       try {
         const info = music.getKeyForSignature(input)
-        this.drawKeySignature(info.keySignature.major)
+        this.$nextTick(() => this.drawKeySignature(info.keySignature.major))
         return [null, info]
       } catch (e) {
         return [e, null]
@@ -105,7 +118,7 @@ Vue.component('page', {
       const notes = input.split(' ')
       try {
         const info = music.getChordNames(notes)
-        this.drawChord(music.addOctavesToNotes(info.notes))
+        this.$nextTick(() => this.drawChord(music.addOctavesToNotes(info.notes)))
         return [null, info]
       } catch (e) {
         return [e, null]
@@ -122,7 +135,7 @@ Vue.component('page', {
     processChordInstanceInput(input) {
       try {
         const chord = music.getChord(input)
-        this.drawChord(chord.chord)
+        this.$nextTick(() => this.drawChord(chord.chord))
         return [null, chord]
       } catch (e) {
         return [e, null]
@@ -160,7 +173,7 @@ Vue.component('page', {
     processScaleInstanceInput(input) {
       try {
         const scale = music.getScale(input)
-        this.drawNotes(scale.scale)
+        this.$nextTick(() => this.drawNotes(scale.scale))
         return [null, scale]
       } catch (e) {
         return [e, null]

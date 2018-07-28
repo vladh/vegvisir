@@ -1,6 +1,7 @@
 .page
   .header
     h1.logo vegvisir
+    span music reference
     .omnibox
       input(type='text', v-model='userInput')
     .examples
@@ -35,9 +36,18 @@
           span Scale types
         .control
           button.btn-text(@click='userInput = "mixolydian"') mixolydian
+      .example
+        .name
+          span Circle of fifths
+        .control
+          button.btn-text(@click='userInput = "circle"') circle
 
   .results
     .title
+      template(v-if="screenType == 'circle'")
+        .type
+          .label Circle of Fifths
+        .desc
       template(v-if="screenType == 'key_signature'")
         .type
           .label Key Signature
@@ -70,10 +80,15 @@
           h2 ${screenData.root.name}${screenData.formattedSymbol}
     .grid
       .info
+        template(v-if="screenType == 'circle'")
+          .circle
+            img(src='/images/circle.svg')
+
         template(v-if="screenType == 'key_signature'")
           p ${screenData.number} ${screenData.accidental}
 
         template(v-if="screenType == 'chord_names'")
+          p.expl These are possible names for this chord, with the most likely coming first.
           ul
             li(v-for='name in screenData.names') ${name}
 
@@ -81,12 +96,13 @@
           ul
             li(v-for='interval in screenData.intervals') ${interval.type}${interval.degree}
           h3 Fitting scales
+          p.expl The following scale types contain all chord tones.
           ul(v-if='screenData.chord.scales().length')
             li(v-for='scale in screenData.chord.scales()') ${scale.name}
           p(v-else) No scales to be found. What a chord!
 
         template(v-if="screenType == 'scale_type'")
-          ul
+          ul.horizontal
             li(v-for='interval in screenData.prettyIntervals') ${interval}
 
         template(v-if="screenType == 'scale_instance'")
@@ -97,10 +113,12 @@
           ul.horizontal
             li(v-for='note in screenData.chord') ${note.name}
           h3 Fitting scales
+          p.expl The following scales contain all chord tones.
           ul(v-if='screenData.scales().length')
             li(v-for='scale in screenData.scales()') ${scale.fullName}
           p(v-else) No scales to be found. What a chord!
-      #engraving.engraving
+
+      #engraving.engraving(v-show="screenType != 'circle'")
 
   .credit
     a(href='https://vladh.net') vladh.net
