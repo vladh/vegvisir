@@ -189,7 +189,7 @@ Vue.component('page', {
       const elMusicDims = elMusic.getBoundingClientRect()
       elMusic.innerHTML = ''
       const renderer = new Vex.Flow.Renderer(elMusic, Vex.Flow.Renderer.Backends.SVG)
-      renderer.resize(elMusicDims.width, elMusicDims.height)
+      renderer.resize(elMusicDims.width - 50, elMusicDims.height)
       return renderer.getContext()
     },
 
