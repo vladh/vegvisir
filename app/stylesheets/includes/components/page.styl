@@ -49,6 +49,9 @@
     background white
     @media (max-width: 600px)
       padding 2rem 1rem
+    .grid
+      @media (max-width: 600px)
+        display block
     .title
       display flex
       flex-direction row-reverse
@@ -88,8 +91,9 @@
         margin-bottom 1rem
         font-size 1.6rem
     .engraving-container
-      @media (max-width: 600px)
-        grid-row 1
+      grid-row 1
+      grid-column 2
+      margin-bottom 2rem
       .engraving
         height 6.5rem
         overflow-x auto

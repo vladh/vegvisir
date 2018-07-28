@@ -79,6 +79,13 @@
         .desc
           h2 ${screenData.root.name}${screenData.formattedSymbol}
     .grid
+      .engraving-container(
+        v-show='screenType != "circle"'
+      )
+        #engraving.engraving(
+          v-show="['chord_instance', 'chord_names', 'key_signature', 'scale_instance'].includes(screenType)"
+        )
+
       .info
         template(v-if="screenType == 'circle'")
           .circle
@@ -117,13 +124,6 @@
           ul(v-if='screenData.scales().length')
             li(v-for='scale in screenData.scales()') ${scale.fullName}
           p(v-else) No scales to be found. What a chord!
-
-      .engraving-container(
-        v-show='screenType != "circle"'
-      )
-        #engraving.engraving(
-          v-show="['chord_instance', 'chord_names', 'key_signature', 'scale_instance'].includes(screenType)"
-        )
 
   .credit
     a(href='https://vladh.net') vladh.net
