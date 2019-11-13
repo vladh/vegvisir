@@ -12,7 +12,7 @@
 
 ## Improvements
 
-* Add clickable fitting scales.
+* Make scales clickable in chords section.
 
 ## Bugs
 
