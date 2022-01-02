@@ -1,6 +1,8 @@
 # vegvisir — music reference
 
-vegvisir is a quick music reference. It currently supports:
+vegvisir is a quick music reference. You can use it at [vegvisir.space](https://vegvisir.space).
+
+It currently supports:
 
 * Chord names — Finding all likely chord names for a set of notes.
 * Key signatures — Naming the key for a number of sharps or flats.
