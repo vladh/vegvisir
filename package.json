@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "lodash": "^4.13.1",
-    "sharp11": "git+https://github.com/vladh/sharp11.git",
+    "sharp11": "^2.0.2",
     "vexflow": "^1.2.84",
     "vue": "^2.4.2"
   },
@@ -15,8 +15,7 @@
     "brunch": "^2.10.12",
     "clean-css-brunch": "^2.10.0",
     "pugjs-brunch": "^2.10.2",
-    "stylus-brunch": "^2.10.0",
-    "uglify-js-brunch": "^2.10.0"
+    "stylus-brunch": "^2.10.0"
   },
   "scripts": {
     "start": "brunch watch --server",
