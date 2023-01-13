@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Vegvisir</title>
+    <meta property="og:title" content="Vegvisir">
+    <meta name="description" content="Vegvisir.">
+    <meta property="og:description" content="Vegvisir.">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
+    <meta property="og:url">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="">
+    <link rel="stylesheet" href="/vendor.css">
+    <link rel="stylesheet" href="/app.css">
+  </head>
+  <body>
+    <div class="page-container" id="page-container">
+      <div class="grid-container">
+        <page></page>
+      </div>
+    </div>
+    <script id="component-template--page" type="text/x-template">
+      <div class="page">
+        <div class="header">
+          <h1 class="logo">vegvisir</h1><span>music reference</span>
+          <div class="omnibox">
+            <input type="text" v-model="userInput">
+          </div>
+          <div class="examples">
+            <p>vegvisir is a music theory lookup tool. Try:</p>
+            <div class="example">
+              <div class="name"><span>Chord names</span></div>
+              <div class="control">
+                <button class="btn-text" @click="userInput = &quot;F C F A D E&quot;">F C F A D E</button>
+              </div>
+            </div>
+            <div class="example">
+              <div class="name"><span>Key signatures</span></div>
+              <div class="control">
+                <button class="btn-text" @click="userInput = &quot;5 sharps&quot;">5 sharps</button>
+              </div>
+            </div>
+            <div class="example">
+              <div class="name"><span>Chords</span></div>
+              <div class="control">
+                <button class="btn-text" @click="userInput = &quot;Fmaj7b5&quot;">Fmaj7b5</button>
+              </div>
+            </div>
+            <div class="example">
+              <div class="name"><span>Chord types</span></div>
+              <div class="control">
+                <button class="btn-text" @click="userInput = &quot;sus2&quot;">sus2</button>
+              </div>
+            </div>
+            <div class="example">
+              <div class="name"><span>Scales</span></div>
+              <div class="control">
+                <button class="btn-text" @click="userInput = &quot;D lydian&quot;">D lydian</button>
+              </div>
+            </div>
+            <div class="example">
+              <div class="name"><span>Scale types</span></div>
+              <div class="control">
+                <button class="btn-text" @click="userInput = &quot;mixolydian&quot;">mixolydian</button>
+              </div>
+            </div>
+            <div class="example">
+              <div class="name"><span>Circle of fifths</span></div>
+              <div class="control">
+                <button class="btn-text" @click="userInput = &quot;circle&quot;">circle</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="results">
+          <div class="title">
+            <template v-if="screenType == 'circle'">
+              <div class="type">
+                <div class="label">Circle of Fifths</div>
+              </div>
+              <div class="desc"></div>
+            </template>
+            <template v-if="screenType == 'key_signature'">
+              <div class="type">
+                <div class="label">Key Signature</div>
+              </div>
+              <div class="desc">
+                <h2>${screenData.keySignature.major} major / ${screenData.keySignature.minor} minor</h2>
+              </div>
+            </template>
+            <template v-if="screenType == 'chord_names'">
+              <div class="type">
+                <div class="label">Chord Names</div>
+              </div>
+              <div class="desc">
+                <h2>${screenData.notes.map(n => n.name).join(' ')}</h2>
+              </div>
+            </template>
+            <template v-if="screenType == 'chord_type'">
+              <div class="type">
+                <div class="label">Chord Type</div>
+              </div>
+              <div class="desc">
+                <h2>${screenData.chord.formattedSymbol}</h2>
+              </div>
+            </template>
+            <template v-if="screenType == 'scale_type'">
+              <div class="type">
+                <div class="label">Scale Type</div>
+              </div>
+              <div class="desc">
+                <h2>${screenData.scale.name}</h2>
+              </div>
+            </template>
+            <template v-if="screenType == 'scale_instance'">
+              <div class="type">
+                <div class="label">Scale</div>
+              </div>
+              <div class="desc">
+                <h2>${screenData.fullName}</h2>
+              </div>
+            </template>
+            <template v-if="screenType == 'chord_instance'">
+              <div class="type">
+                <div class="label">Chord</div>
+              </div>
+              <div class="desc">
+                <h2>${screenData.root.name}${screenData.formattedSymbol}</h2>
+              </div>
+            </template>
+          </div>
+          <div class="grid">
+            <div class="engraving-container" v-show="screenType != &quot;circle&quot;">
+              <div class="engraving" id="engraving" v-show="['chord_instance', 'chord_names', 'key_signature', 'scale_instance'].includes(screenType)"></div>
+            </div>
+            <div class="info">
+              <template v-if="screenType == 'circle'">
+                <div class="circle"><img src="/images/circle.svg"></div>
+              </template>
+              <template v-if="screenType == 'key_signature'">
+                <p>${screenData.number} ${screenData.accidental}</p>
+              </template>
+              <template v-if="screenType == 'chord_names'">
+                <p class="expl">These are possible names for this chord, with the most likely coming first.</p>
+                <ul>
+                  <li v-for="name in screenData.names">${name}</li>
+                </ul>
+              </template>
+              <template v-if="screenType == 'chord_type'">
+                <ul>
+                  <li v-for="interval in screenData.intervals">${interval.type}${interval.degree}</li>
+                </ul>
+                <h3>Fitting scales</h3>
+                <p class="expl">The following scale types contain all chord tones.</p>
+                <ul v-if="screenData.chord.scales().length">
+                  <li v-for="scale in screenData.chord.scales()">${scale.name}</li>
+                </ul>
+                <p v-else>No scales to be found. What a chord!</p>
+              </template>
+              <template v-if="screenType == 'scale_type'">
+                <ul class="horizontal">
+                  <li v-for="interval in screenData.prettyIntervals">${interval}</li>
+                </ul>
+              </template>
+              <template v-if="screenType == 'scale_instance'">
+                <ul>
+                  <li v-for="note in screenData.scale">${note.fullName}</li>
+                </ul>
+              </template>
+              <template v-if="screenType == 'chord_instance'">
+                <ul class="horizontal">
+                  <li v-for="note in screenData.chord">${note.name}</li>
+                </ul>
+                <h3>Fitting scales</h3>
+                <p class="expl">The following scales contain all chord tones.</p>
+                <ul v-if="screenData.scales().length">
+                  <li v-for="scale in screenData.scales()">${scale.fullName}</li>
+                </ul>
+                <p v-else>No scales to be found. What a chord!</p>
+              </template>
+            </div>
+          </div>
+        </div>
+        <div class="credit"><a href="https://vladh.net">vladh.net</a></div>
+      </div>
+    </script>
+    <script src="/vendor.js"></script>
+    <script src="/app.js"></script>
+    <script>require('app')</script>
+  </body>
+</html>
