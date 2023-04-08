@@ -13,7 +13,7 @@
     "babel-brunch": "^6.1.1",
     "babel-preset-env": "^1.7.0",
     "brunch": "^2.10.12",
-    "clean-css-brunch": "^2.10.0",
+    "clean-css-brunch": "^3.0.0",
     "pugjs-brunch": "^2.10.2",
     "stylus-brunch": "^2.10.0"
   },
