@@ -15,7 +15,7 @@
     "brunch": "^2.10.12",
     "clean-css-brunch": "^2.10.0",
     "pugjs-brunch": "^2.10.2",
-    "stylus-brunch": "^2.10.0"
+    "stylus-brunch": "^3.0.0"
   },
   "scripts": {
     "start": "brunch watch --server",
