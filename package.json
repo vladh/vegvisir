@@ -6,7 +6,7 @@
     "lodash": "^4.13.1",
     "sharp11": "^2.0.2",
     "vexflow": "^1.2.84",
-    "vue": "^2.4.2"
+    "vue": "^3.0.0"
   },
   "devDependencies": {
     "auto-reload-brunch": "^2.7.1",
